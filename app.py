@@ -5,11 +5,14 @@ import fiona, json
 from shapely.geometry import shape, mapping
 from shapely.ops import linemerge
 
+from logging import basicConfig, getLogger
+
 from tempfile import NamedTemporaryFile
 
 import uuid
 import os
 
+logger = getLogger(__name__)
 
 class Resource(object):
 
@@ -42,7 +45,7 @@ class Resource(object):
         filename = uuid.uuid4().hex
         with open(f'/tmp/img/{filename}.png', 'wb') as output:
             output.write(response.content)
-
+        logger.info(f'file write in {filename}')
         resp.body = f'<html><head><meta http-equiv="refresh" content="0; url=/{filename}.png"></head><body></body></html>'
         resp.status = falcon.HTTP_302
         resp.set_header('Location', f'/img/{filename}.png')
